@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Supplier extends Model
 {
     use HasFactory;
+    public function get_supplier(){
+        $sql = $this->select("suppliers.*");
+        return $sql;
+    }
 }

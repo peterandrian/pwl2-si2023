@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div>
-                    <h3 class="text-center my-4">Tutorial Laravel 11</h3>
+                    <h3 class="text-center my-4">Data Supplier 101</h3>
                     <hr>
                 </div>
 
@@ -23,8 +23,10 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">Supplier Name</th>
-                                    <th scope="col">PIC Supplier</th>
+                                <th scope="col">SUPPLIER NAME</th>
+                                <th scope="col">SUPPLIER ADDRESS</th>
+                                <th scope="col">PIC SUPPLIER</th>
+                                <th scope="col">NO. HP PIC SUPPLIER</th>
                                     <th scope="col" style="width: 20%">ACTIONS</th>
                                 </tr>
                             </thead>
@@ -32,7 +34,9 @@
                                 @forelse ($suppliers as $supplier)
                                     <tr>
                                         <td>{{ $supplier->supplier_name }}</td>
+                                        <td>{{ $supplier->alamat_supplier }}</td>
                                         <td>{{ $supplier->pic_supplier }}</td>
+                                        <td>{{ $supplier->no_hp_pic_supplier }}</td>
                                         <td class="text-center">
                                             <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('supplier.destroy', $supplier->id) }}" method="POST">
                                                 <a href="{{ route('supplier.show', $supplier->id) }}" class="btn btn-sm btn-dark">SHOW</a>

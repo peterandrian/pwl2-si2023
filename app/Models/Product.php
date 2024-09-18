@@ -9,7 +9,8 @@ class Product extends Model
 {
     use HasFactory;
     public function get_product(){
-        $sql = $this->select("products.*", "category_product.product_category_name as product_category_name")
+        $sql = $this->select("products.*", "category_product.product_category_name as product_category_name", "suppliers.supplier_name as supplier_name")
+                    ->join('suppliers', 'suppliers.id', '=', 'products.id_supplier')
                     ->join('category_product', 'category_product.id', '=', 'products.product_category_id');
         return $sql;
     }

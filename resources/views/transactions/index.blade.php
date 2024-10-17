@@ -26,39 +26,57 @@
                                     <th scope="col">TANGGAL TRANSAKSI</th>
                                     <th scope="col">CASHIER NAME</th>
                                     <th scope="col">PRODUCT NAME</th>
-                                    <th scope="col">CATEGORY</th>
                                     <th scope="col">PRICE</th>
                                     <th scope="col">UNIT</th>
+                                    <th scope="col">SUBTOTAL</th>
                                     <th scope="col">TOTAL</th>
                                     <th scope="col" style="width: 20%">ACTIONS</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($transactions as $transaction)
+                            @forelse ($transactions as $transaction)
+                                @php
+                                    $products = explode(', ', $transaction->product_names);
+                                    $prices = explode(', ', $transaction->product_prices);
+                                    $quantities = explode(', ', $transaction->jumlah_pembelian);
+                                    $rowCount = count($products);
+                                    $subtotal = 0; // Initialize subtotal for the transaction
+                                @endphp
+                                
+                                @foreach ($products as $index => $product_name)
+                                    @php
+                                        $subtotal = $prices[$index] * $quantities[$index];
+                                    @endphp
                                     <tr>
-                                        <td>{{ $transaction->tanggal_transaksi }}</td>
-                                        <td>{{ $transaction->nama_kasir }}</td>
-                                        <td>{{ $transaction->product_name }}</td>
-                                        <td>{{ $transaction->product_category_name }}</td>
-                                        <td>{{ number_format($transaction->product_price, 2, ',', '.') }}</td>
-                                        <td>{{ $transaction->jumlah_pembelian }}</td>
-                                        <td>{{ number_format($transaction->product_price * $transaction->jumlah_pembelian, 2, ',', '.') }}</td>
-                                        <td class="text-center">
-                                            <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('transaction.destroy', $transaction->id) }}" method="POST">
-                                                <a href="{{ route('transaction.show', $transaction->id) }}" class="btn btn-sm btn-dark">SHOW</a>
-                                                <a href="{{ route('transaction.edit', $transaction->id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
-                                            </form>
-                                        </td>
+                                        @if ($index === 0)
+                                            <td rowspan="{{ $rowCount }}">{{ $transaction->created_at }}</td>
+                                            <td rowspan="{{ $rowCount }}">{{ ucwords($transaction->nama_kasir) }}</td>
+                                        @endif
+                                        <td>{{ ucwords($product_name) }}</td>
+                                        <td>{{ number_format($prices[$index], 2, ',', '.') }}</td>
+                                        <td>{{ number_format($quantities[$index]) }}</td>
+                                        <td>{{ number_format($subtotal, 2, ',', '.') }}</td>
+
+                                        @if ($index === 0)
+                                            <td rowspan="{{ $rowCount }}">{{ number_format($transaction->total_transaction, 2, ',', '.') }}</td>
+                                            <td rowspan="{{ $rowCount }}" class="text-center">
+                                                <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('transaction.destroy', $transaction->id) }}" method="POST">
+                                                    <a href="{{ route('transaction.show', $transaction->id) }}" class="btn btn-sm btn-dark">SHOW</a>
+                                                    <a href="{{ route('transaction.edit', $transaction->id) }}" class="btn btn-sm btn-primary">EDIT</a>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
+                                                </form>
+                                            </td>
+                                        @endif
                                     </tr>
-                                @empty
-                                    <div class="alert alert-danger">
-                                        Data Transactions belum tersedia.
-                                    </div>
-                                @endforelse
-                            </tbody>
+                                @endforeach                                      
+                            @empty
+                                <div class="alert alert-danger">
+                                    Data Transactions belum tersedia.
+                                </div>
+                            @endforelse
+                        </tbody>
                         </table>
                         {{ $transactions->links() }}
                     </div>
@@ -91,4 +109,3 @@
     </script>
 </body>
 </html>
-

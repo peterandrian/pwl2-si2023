@@ -46,58 +46,59 @@ class TransactionController extends Controller
         return view('transactions.create', compact('data'));    
     }
 
-    /* 
-    * store
-    *
-    * @param mixed $request
-    * @return RedirectedResponse
-    */
-
-    public function store(Request $request) : RedirectResponse
+    /**
+     * Store a new transaction and reduce product stock.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse
     {
-        $validatedData = $request->validate([
+        // Validate the request
+        $request->validate([
             'nama_kasir_id' => 'required|exists:kasir,id',
             'id_product' => 'required|array|min:1',
             'id_product.*' => 'required|exists:products,id',
             'quantity' => 'required|array|min:1',
             'quantity.*' => 'required|integer|min:1',
         ]);
-    
-        // Begin a transaction
-        DB::beginTransaction();
-    
+
+        DB::beginTransaction(); // Start a transaction to ensure all operations succeed or fail together
         try {
-            // 1. Insert into the 'transactions' table
-            $transaction = DB::table('transaksi_penjualan')->insertGetId([
-                'id_kasir' => $request->input('nama_kasir_id'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-    
-            // 2. Loop through the products and insert into 'transaction_details'
-            $products = $request->input('id_product');
-            $quantities = $request->input('quantity');
-    
-            foreach ($products as $index => $product_id) {
+            // Create the transaction in the transaksi_penjualan table
+            $transaction = new Transaction();
+            $transaction->id_kasir = $request->nama_kasir_id;
+            $transaction->save();
+
+            // Loop through each product and its quantity
+            foreach ($request->id_product as $index => $productId) {
+                $product = Product::findOrFail($productId); 
+
+                // Check if stock is sufficient
+                if ($product->stock < $request->quantity[$index]) {
+                    return redirect()->back()->withErrors(['error' => 'Stock for ' . $product->title . ' is insufficient.']);
+                }
+
+                // Update product stock
+                $product->stock -= $request->quantity[$index];
+                $product->save();
+
+                // Insert into detail_transaksi_penjualan
                 DB::table('detail_transaksi_penjualan')->insert([
-                    'id_transaksi_penjualan' => $transaction,
-                    'id_product' => $product_id,
-                    'jumlah_pembelian' => $quantities[$index],
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'id_transaksi_penjualan' => $transaction->id,
+                    'id_product' => $productId,
+                    'jumlah_pembelian' => $request->quantity[$index],
                 ]);
             }
-    
-            // Commit the transaction if everything is successful
-            DB::commit();
-    
-            return redirect()->route('transaction.index')->with(['success' => 'Data Berhasil Disimpan!']);
+
+            DB::commit(); // Commit the transaction
+
+            return redirect()->route('transaction.index')->with(['success' => 'Transaction successfully created and stock updated!']);
         
         } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->route('transaction.index')->with(['error' => 'Failed to save data.']);
+            DB::rollBack(); // Rollback on error
+            return redirect()->back()->withErrors(['error' => 'Failed to create transaction.']);
         }
-            
     }
 
     /**

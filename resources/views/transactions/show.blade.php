@@ -6,6 +6,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Transaction Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: auto;
+        }
+        h3 {
+            color: #343a40;
+            font-weight: bold;
+        }
+        .card {
+            border-radius: 10px;
+            border: none;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-success, .btn-danger, .btn-primary, .btn-warning {
+            border-radius: 50px;
+        }
+        .remove-product-btn {
+            border-radius: 50px;
+        }
+    </style>
 </head>
 <body style="background: lightgray">
 

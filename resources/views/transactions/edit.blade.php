@@ -6,6 +6,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Edit Transaction</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        h3 {
+            color: #343a40;
+            font-weight: bold;
+        }
+        .card {
+            border-radius: 10px;
+            border: none;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-success, .btn-danger, .btn-primary, .btn-warning {
+            border-radius: 50px;
+        }
+        .remove-product-btn {
+            border-radius: 50px;
+        }
+    </style>
 </head>
 <body style="background: lightgray">
 
@@ -18,12 +43,11 @@
                         <form id="transactionForm" action="{{ route('transaction.update', $data['transactions']->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-
                             <!-- Cashier Selection -->
                             <div class="form-group mb-3">
-                                <label for="nama_kasir_id">Nama Kasir</label>
+                                <label for="nama_kasir_id">Cashier Name</label>
                                 <select class="form-control" id="nama_kasir_id" name="nama_kasir_id">
-                                    <option value="">-- Cashier Name --</option>
+                                    <option value="">-- Select Cashier --</option>
                                     @foreach ($data['cashiers'] as $cashier)
                                         <option value="{{ $cashier->id }}" {{ $cashier->id == $data['transactions']->id_kasir ? 'selected' : '' }}>
                                             {{ ucwords($cashier->nama_kasir) }}
@@ -39,7 +63,7 @@
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="form-group mb-3">
-                                                    <label for="id_product">Nama Produk</label>
+                                                    <label for="id_product">Product Name</label>
                                                     <select class="form-control product-select" name="id_product[]">
                                                         <option value="">-- Select Product --</option>
                                                         @foreach ($data['products'] as $product)
@@ -53,7 +77,7 @@
 
                                             <div class="col-md-3">
                                                 <div class="form-group mb-3">
-                                                    <label class="font-weight-bold">QUANTITY</label>
+                                                    <label class="font-weight-bold">Quantity</label>
                                                     <input type="number" class="form-control" name="quantity[]" value="{{ explode(', ', $data['transactions']->jumlah_pembelian)[$index] }}" min="1" placeholder="Enter Quantity">
                                                 </div>
                                             </div>
@@ -67,11 +91,9 @@
                             </div>
 
                             <!-- Add Product Button -->
-                            <button type="button" class="btn btn-md btn-success mb-3" id="addProductBtn">ADD PRODUCT</button>
-
-                            <!-- Save Changes Button -->
-                            <button type="submit" class="btn btn-md btn-primary me-3">SAVE CHANGES</button>
-                            <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
+                            <button type="button" class="btn btn-md btn-success mx-2" id="addProductBtn">Add Product</button>
+                            <button type="submit" class="btn btn-md btn-primary mx-2">Save Changes</button>
+                            <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning mx-2">Reset</button>
                         </form>
                     </div>
                 </div>

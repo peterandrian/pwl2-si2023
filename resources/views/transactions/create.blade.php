@@ -6,21 +6,46 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add New Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: auto;
+        }
+        h3 {
+            color: #343a40;
+            font-weight: bold;
+        }
+        .card {
+            border-radius: 10px;
+            border: none;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-success, .btn-danger, .btn-primary, .btn-warning {
+            border-radius: 50px;
+        }
+        .remove-product-btn {
+            border-radius: 50px;
+        }
+    </style>
 </head>
-<body style="background: lightgray">
+<body>
 
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12">
                 <h3>Add New Transaction</h3>
                 <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form id="transactionForm" action="{{ route('transaction.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                            <div class="form-group mb-3">
-                                <label for="nama_kasir_id">Nama Kasir</label>
+                            <div class="form-group mb-4">
+                                <label for="nama_kasir_id">Cashier Name</label>
                                 <select class="form-control" id="nama_kasir_id" name="nama_kasir_id">
-                                    <option value="">-- Cashier Name --</option>
+                                    <option value="">-- Select Cashier --</option>
                                     @foreach ($data['cashiers'] as $cashier)
                                         <option value="{{ $cashier->id }}">{{ ucwords($cashier->nama_kasir) }}</option>
                                     @endforeach
@@ -29,11 +54,11 @@
 
                             <!-- Product container for dynamic products -->
                             <div id="product-container">
-                                <div class="product-row">
+                                <div class="product-row mb-4">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="form-group mb-3">
-                                                <label for="id_product">Nama Produk</label>
+                                                <label for="id_product">Product Name</label>
                                                 <select class="form-control product-select" name="id_product[]">
                                                     <option value="">-- Select Product --</option>
                                                     @foreach ($data['products'] as $product)
@@ -45,7 +70,7 @@
 
                                         <div class="col-md-3">
                                             <div class="form-group mb-3">
-                                                <label class="font-weight-bold">QUANTITY</label>
+                                                <label for="quantity" class="font-weight-bold">Quantity</label>
                                                 <input type="number" class="form-control" name="quantity[]" placeholder="Enter Quantity">
                                             </div>
                                         </div>
@@ -57,10 +82,12 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-md btn-success mb-3" id="addProductBtn">ADD PRODUCT</button>
-
-                            <button type="submit" class="btn btn-md btn-primary me-3">SAVE</button>
-                            <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
+                            <!-- Flex container for buttons with consistent spacing -->
+                            <div class="d-flex align-items-center mb-3">
+                                <button type="button" class="btn btn-success me-3" id="addProductBtn">Add Product</button>
+                                <button type="submit" class="btn btn-primary me-3">Save</button>
+                                <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-warning">Reset</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -132,18 +159,17 @@
         attachProductChangeEvent(document.querySelector('.product-row'));
 
         function resetForm() {
-            document.getElementById("productForm").reset(); // Reset semua nilai dalam form
+            document.getElementById("transactionForm").reset(); // Reset all values in the form
         }
-
 
         function addInitialProduct() {
             var productContainer = document.getElementById('product-container');
             var productRow = `
-                <div class="product-row">
+                <div class="product-row mb-4">
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group mb-3">
-                                <label for="id_product">Nama Produk</label>
+                                <label for="id_product">Product Name</label>
                                 <select class="form-control product-select" name="id_product[]">
                                     <option value="">-- Select Product --</option>
                                     @foreach ($data['products'] as $product)
@@ -155,7 +181,7 @@
 
                         <div class="col-md-3">
                             <div class="form-group mb-3">
-                                <label class="font-weight-bold">QUANTITY</label>
+                                <label class="font-weight-bold">Quantity</label>
                                 <input type="number" class="form-control" name="quantity[]" placeholder="Enter Quantity">
                             </div>
                         </div>

@@ -7,7 +7,7 @@ Kelompok 3:
 
 Work:
 - Peter - Transaksi backend
-- Kevin - Supplier backend
-- Yesman - Supplier frontend
-- Varlent - Transaksi frontend
-- Bambang - Produk frontend
+- Kevin - Supplier backend, frontend (edit,create)
+- Yesman - Supplier frontend (index, show)
+- Varlent - Transaksi frontend (index, show, create)
+- Bambang - Produk frontend (index, show)

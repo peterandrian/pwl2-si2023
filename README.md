@@ -9,5 +9,5 @@ Work:
 - Peter - Transaksi backend
 - Kevin - Supplier backend
 - Yesman - Supplier frontend
-- Bambang - Produk frontend
 - Varlent - Transaksi frontend
+- Bambang - Produk frontend

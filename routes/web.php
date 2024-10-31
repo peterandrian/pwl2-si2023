@@ -9,3 +9,4 @@ Route::get('/', function () {
 Route::resource('/products',  \App\Http\Controllers\ProductController::class);
 Route::resource('/supplier', \App\Http\Controllers\SupplierController::class);
 Route::resource('/transaction', \App\Http\Controllers\TransactionController::class);
+Route::get('/send-email/{to}/{id}', [\App\Http\Controllers\TransactionController::class, 'sendEmail']);

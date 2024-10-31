@@ -84,6 +84,11 @@
                     @csrf
                     @method('PUT')
 
+                    <div class="form-group mb-3">
+                        <label for="email_pembeli">Buyer Email</label>
+                        <input type="email" class="form-control" id="email_pembeli" name="email_pembeli" value="{{ $data['transactions']->email_pembeli }}" placeholder="Enter Buyer Email" required>
+                    </div>
+
                     <!-- Cashier Selection -->
                     <div class="form-group mb-3">
                         <label for="nama_kasir_id">Cashier Name</label>
@@ -145,42 +150,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Function to add a new product row
         document.getElementById('addProductBtn').addEventListener('click', function() {
             var productContainer = document.getElementById('product-container');
-            var newProductRow = document.querySelector('.product-row').cloneNode(true); // Clone the product row
-            newProductRow.querySelector('input').value = ''; // Clear the quantity input
-            newProductRow.querySelector('select').value = ''; // Clear the product selection
+            var newProductRow = document.querySelector('.product-row').cloneNode(true);
+            newProductRow.querySelector('input').value = '';
+            newProductRow.querySelector('select').value = '';
 
-            // Append the new product row to the container
             productContainer.appendChild(newProductRow);
 
-            // Attach event listeners
             attachRemoveButtonEvent(newProductRow);
             attachProductChangeEvent(newProductRow);
-            updateProductOptions(); // Update available product options
+            updateProductOptions();
         });
 
-        // Function to remove a product row
         function attachRemoveButtonEvent(row) {
             row.querySelector('.remove-product-btn').addEventListener('click', function() {
                 if (document.querySelectorAll('.product-row').length > 1) {
-                    row.remove(); // Remove the product row
-                    updateProductOptions(); // Update available product options after removal
+                    row.remove();
+                    updateProductOptions();
                 } else {
                     alert('You need at least one product row.');
                 }
             });
         }
 
-        // Function to handle product selection change
         function attachProductChangeEvent(row) {
             row.querySelector('.product-select').addEventListener('change', function() {
                 updateProductOptions();
             });
         }
 
-        // Function to update product dropdown options based on selected values
         function updateProductOptions() {
             var selectedProducts = [];
             document.querySelectorAll('.product-select').forEach(function(select) {
@@ -190,11 +189,7 @@
             document.querySelectorAll('.product-select').forEach(function(select) {
                 select.querySelectorAll('option').forEach(function(option) {
                     if (option.value !== '' && selectedProducts.includes(option.value)) {
-                        if (option.value === select.value) {
-                            option.disabled = false; // Don't disable the currently selected option
-                        } else {
-                            option.disabled = true; // Disable options already selected in other rows
-                        }
+                        option.disabled = (option.value !== select.value);
                     } else {
                         option.disabled = false;
                     }
@@ -202,12 +197,18 @@
             });
         }
 
-        // Initially attach the remove button listeners
-        attachRemoveButtonEvent(document.querySelector('.product-row'));
-        attachProductChangeEvent(document.querySelector('.product-row'));
+        // Attach initial event listeners for all rows
+        document.querySelectorAll('.product-row').forEach(row => {
+            attachRemoveButtonEvent(row);
+            attachProductChangeEvent(row);
+        });
+
+        // Initial call to disable selected options on page load
+        updateProductOptions();
 
         function resetForm() {
-            document.getElementById("transactionForm").reset(); // Reset all values in the form
+            document.getElementById("transactionForm").reset();
+            updateProductOptions();
         }
     </script>
 </body>

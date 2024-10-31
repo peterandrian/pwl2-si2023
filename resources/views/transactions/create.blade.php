@@ -102,6 +102,11 @@
                     <div class="card-body">
                         <form id="transactionForm" action="{{ route('transaction.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            
+                            <div class="form-group mb-4">
+                                <label for="email_pembeli">Buyer Email</label>
+                                <input type="email" class="form-control" id="email_pembeli" name="email_pembeli" placeholder="Enter Buyer Email" required>
+                            </div>
 
                             <div class="form-group mb-4">
                                 <label for="nama_kasir_id">Cashier Name</label>

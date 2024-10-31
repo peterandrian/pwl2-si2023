@@ -10,6 +10,10 @@ class Transaction extends Model
 {
     use HasFactory;
     protected $table = 'transaksi_penjualan';
+    protected $fillable = [
+        'id_kasir', 
+        // Add other fields here as necessary
+    ];
 
     public function get_transaction(){
         $sql = $this->select("transaksi_penjualan.*", 
@@ -22,7 +26,7 @@ class Transaction extends Model
                     ->join('kasir', 'kasir.id', '=', 'transaksi_penjualan.id_kasir')
                     ->join('products', 'products.id', '=', 'detail_transaksi_penjualan.id_product')
                     ->join('category_product', 'category_product.id', '=', 'products.product_category_id')
-                    ->groupBy('transaksi_penjualan.id', 'transaksi_penjualan.id_kasir', 'transaksi_penjualan.created_at', 'transaksi_penjualan.updated_at', 'kasir.nama_kasir'); // Group by all relevant fields
+                    ->groupBy('transaksi_penjualan.id', 'transaksi_penjualan.id_kasir', 'transaksi_penjualan.created_at', 'transaksi_penjualan.updated_at', 'kasir.nama_kasir', 'transaksi_penjualan.email_pembeli'); // Group by all relevant fields
         return $sql;
         
         if ($id) {
